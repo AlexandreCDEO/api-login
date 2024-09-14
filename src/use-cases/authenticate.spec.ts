@@ -1,13 +1,18 @@
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { PrismaSecUserRepository } from '../repositories/prisma/prisma-secuser-repository'
 import { AuthenticateUseCase } from './authenticate'
 import { InvalidCredentialError } from './errors/invalid-credentials-error'
 
-describe('Authenticate Use Case', () => {
-    it('should be able to authenticate', async() => {
-        const secUserRepository = new PrismaSecUserRepository()
-        const sut = new AuthenticateUseCase(secUserRepository)
+let secUserRepository: PrismaSecUserRepository
+let sut: AuthenticateUseCase
 
+describe('Authenticate Use Case', () => {
+    beforeEach(() => {
+        secUserRepository = new PrismaSecUserRepository()
+        sut = new AuthenticateUseCase(secUserRepository)
+    })
+
+    it('should be able to authenticate', async() => {
         const { user } = await sut.execute({
             secusername: 'JHONDOE',
             secuserpassword: 'password'
@@ -17,9 +22,6 @@ describe('Authenticate Use Case', () => {
     })
 
     it('should not be able to authenticate with wrong secusername', async() => {
-        const secUserRepository = new PrismaSecUserRepository()
-        const sut = new AuthenticateUseCase(secUserRepository)
-
         expect(() => sut.execute({
             secusername: 'JHONDOE01',
             secuserpassword: 'password'
@@ -28,9 +30,6 @@ describe('Authenticate Use Case', () => {
     })
 
     it('should not be able to authenticate with wrong password', async() => {
-        const secUserRepository = new PrismaSecUserRepository()
-        const sut = new AuthenticateUseCase(secUserRepository)
-
         expect(() => sut.execute({
             secusername: 'JHONDOE',
             secuserpassword: 'password01'

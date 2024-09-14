@@ -15,7 +15,7 @@ export class RegisterUseCase {
     async execute({ secusernamecomp, email, secusername, secuserpassword }: RegisterUseCaseRequest) {
         const user = await this.repository.findByEmail(email)
 
-        if(user) {
+        if (user) {
             throw new UserAlreadyExists()
         }
 
