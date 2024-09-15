@@ -1,4 +1,3 @@
-import { SecUser } from "@prisma/client";
 import { SecUserRepository } from "../repositories/secuser-repository";
 import { InvalidCredentialError } from "./errors/invalid-credentials-error";
 
@@ -7,17 +6,13 @@ interface AuthenticateUseCaseRequest {
     secuserpassword: string
 }
 
-interface AuthenticateUseCaseResponse {
-    user: SecUser
-}
-
 export class AuthenticateUseCase {
     constructor(
         private secUserRepository: SecUserRepository
     ){}
 
-    async execute({ secusername, secuserpassword }: AuthenticateUseCaseRequest): Promise<AuthenticateUseCaseResponse> {
-        const user = await this.secUserRepository.findByUsername(secusername)
+    async execute({ secusername, secuserpassword }: AuthenticateUseCaseRequest) {
+        const user = await this.secUserRepository.findByUsername(secusername.toUpperCase())
 
         if(!user) {
             throw new InvalidCredentialError()
@@ -27,10 +22,6 @@ export class AuthenticateUseCase {
 
         if(passwordDecrypted !== secuserpassword) {
             throw new InvalidCredentialError()
-        }
-
-        return {
-            user
         }
 
     }

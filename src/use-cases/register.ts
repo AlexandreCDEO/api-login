@@ -34,5 +34,6 @@ export class RegisterUseCase {
             secusernamecomp,
             secuseremail: email,
         })
+
     }
 }

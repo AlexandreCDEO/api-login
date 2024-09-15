@@ -16,15 +16,15 @@ export async function authenticate (request: FastifyRequest, reply: FastifyReply
         const prismaSecUserRepository = new PrismaSecUserRepository()
         const authenticateUseCase = new AuthenticateUseCase(prismaSecUserRepository)
 
-        authenticateUseCase.execute({ secusername, secuserpassword})
+        await authenticateUseCase.execute({ secusername, secuserpassword})
+        
+        return reply.status(200).send({success: true, message: 'Autenticado com sucesso!'})
+
     } catch (err) {
         if(err instanceof(InvalidCredentialError)) {
             return reply.status(400).send({message: err.message})
         }
 
         throw err
-    }
-
-    return reply.status(200).send({success: true, message: 'Autenticado com sucesso!'})
-    
+    } 
 }
